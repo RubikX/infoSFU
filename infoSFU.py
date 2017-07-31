@@ -14,10 +14,24 @@ def main():
 		ans = input("Please select an option: ")
 		if ans == "1":
 			course_information()
-			ans = False
+			print("Would you like to continue? (y/n)")
+			user_input = input("").lower()
+			if user_input == "y":
+				ans = True
+			elif user_input == "n":
+				ans = False
+			else:
+				print("Not a valid option")
 		elif ans == "2":
 			section_information()
-			ans = False
+			print("Would you like to continue? (y/n)")
+			user_input = input("").lower()
+			if user_input == "y":
+				ans = True
+			elif user_input == "n":
+				ans = False
+			else:
+				print("Not a valid option")
 		elif ans == "3":
 			ans = False
 		else:

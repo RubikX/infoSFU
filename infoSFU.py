@@ -95,7 +95,7 @@ def section_information():
 	print("Format: Semester Year Department Course-number Section")
 	user_input = input("").split()
 	user_input = [i.lower() for i in user_input]	
-	sec_info_url = 'http://www.sfu.ca/bin/wcm/course-outlines?{}/{}/{}/{}/d100'.format(
+	sec_info_url = 'http://www.sfu.ca/bin/wcm/course-outlines?{}/{}/{}/{}/{}'.format(
 					user_input[1],user_input[0],user_input[2],user_input[3],user_input[4])
 	response = requests.get(sec_info_url,headers=headers)
 	if response.status_code != 200:

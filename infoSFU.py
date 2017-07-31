@@ -105,23 +105,29 @@ def section_information():
 	print("Instructor: {}".format(sec_info['instructor'][0]['name']))
 	print("Start date: {}".format(sec_info['courseSchedule'][0]['startDate'].replace("00:00:00 PDT","").replace("  "," ")))
 	print("End date: {}".format(sec_info['courseSchedule'][0]['endDate'].replace("00:00:00 PDT","").replace("  "," ")))
-	print("Days: {}".format(sec_info['courseSchedule'][0]['days']))
-	print("Location: {}{}, {} campus".format(
-								sec_info['courseSchedule'][0]['buildingCode'], 
-								sec_info['courseSchedule'][0]['roomNumber'],
-								sec_info['courseSchedule'][0]['campus'])
-								)
-							
 	print("Units: {}".format(sec_info['info']['units']))
-	print(delimiter)
-	print("Final exam date: {}".format(sec_info['examSchedule'][0]['startDate'].replace("00:00:00 PDT","").replace("  "," ")))
-	print("Final exam location: {} {}, {}".format(
-								sec_info['examSchedule'][0]['buildingCode'],
-								sec_info['examSchedule'][0]['roomNumber'],
-								sec_info['examSchedule'][0]['campus'])
-								)
-	print("Final exam time: {}-{}".format(sec_info['examSchedule'][0]['startTime'], sec_info['examSchedule'][0]['endTime']))
 	print("\n")
+	for i in range(len(sec_info['courseSchedule'])):
+		print("Day(s): {}".format(sec_info['courseSchedule'][i]['days']))
+		print("Location: {} {}, {} campus".format(
+									sec_info['courseSchedule'][i]['buildingCode'], 
+									sec_info['courseSchedule'][i]['roomNumber'],
+									sec_info['courseSchedule'][i]['campus'])
+									)
+		print("Time: {}-{}".format(sec_info['courseSchedule'][i]['startTime'], sec_info['courseSchedule'][i]['endTime'] ))
+		print("\n")
+	if len(sec_info['examSchedule']) > 1:
+		print(delimiter)
+		print("Final exam date: {}".format(sec_info['examSchedule'][0]['startDate'].replace("00:00:00 PDT","").replace("  "," ")))
+		print("Final exam location: {} {}, {}".format(
+									sec_info['examSchedule'][0]['buildingCode'],
+									sec_info['examSchedule'][0]['roomNumber'],
+									sec_info['examSchedule'][0]['campus'])
+									)
+		print("Final exam time: {}-{}".format(sec_info['examSchedule'][0]['startTime'], sec_info['examSchedule'][0]['endTime']))
+		print("\n")
+	else:
+		print("There is no final exam currently listed.")
 # ================================================================================
 
 if __name__ == "__main__":

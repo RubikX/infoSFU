@@ -130,7 +130,8 @@ def section_information():
 									)
 		print("Time: {}-{}".format(sec_info['courseSchedule'][i]['startTime'], sec_info['courseSchedule'][i]['endTime'] ))
 		print("\n")
-	if len(sec_info['examSchedule']) > 1:
+		
+	if len(sec_info['examSchedule']) > 0:
 		print(delimiter)
 		print("Final exam date: {}".format(sec_info['examSchedule'][0]['startDate'].replace("00:00:00 PDT","").replace("  "," ")))
 		print("Final exam location: {} {}, {}".format(

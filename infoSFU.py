@@ -134,11 +134,14 @@ def section_information():
 	if len(sec_info['examSchedule']) > 0:
 		print(delimiter)
 		print("Final exam date: {}".format(sec_info['examSchedule'][0]['startDate'].replace("00:00:00 PDT","").replace("  "," ")))
-		print("Final exam location: {} {}, {}".format(
-									sec_info['examSchedule'][0]['buildingCode'],
-									sec_info['examSchedule'][0]['roomNumber'],
-									sec_info['examSchedule'][0]['campus'])
-									)
+		try:
+			print("Final exam location: {} {}, {}".format(
+										sec_info['examSchedule'][0]['buildingCode'],
+										sec_info['examSchedule'][0]['roomNumber'],
+										sec_info['examSchedule'][0]['campus'])
+										)
+		except KeyError:
+			print("No location has been currently listed.")
 		print("Final exam time: {}-{}".format(sec_info['examSchedule'][0]['startTime'], sec_info['examSchedule'][0]['endTime']))
 		print("\n")
 	else:

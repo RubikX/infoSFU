@@ -2,6 +2,7 @@
 # Description: infoSFU aggregates useful information from SFU about courses
 
 import requests
+import time
 
 headers = {'User-agent': "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36"}
 delimiter = "=============================================================================="
@@ -118,7 +119,7 @@ def section_information():
 	print("\n")
 	print("Instructor: {}".format(sec_info['instructor'][0]['name']))
 	print("Start date: {}".format(sec_info['courseSchedule'][0]['startDate'].replace("00:00:00 PDT","").replace("  "," ")))
-	print("End date: {}".format(sec_info['courseSchedule'][0]['endDate'].replace("00:00:00 PDT","").replace("  "," ")))
+	print("End date: {}".format(sec_info['courseSchedule'][0]['endDate'].replace("00:00:00 PST","").replace("  "," ")))
 	print("Units: {}".format(sec_info['info']['units']))
 	print("\n")
 	for i in range(len(sec_info['courseSchedule'])):
@@ -128,12 +129,16 @@ def section_information():
 									sec_info['courseSchedule'][i]['roomNumber'],
 									sec_info['courseSchedule'][i]['campus'])
 									)
-		print("Time: {}-{}".format(sec_info['courseSchedule'][i]['startTime'], sec_info['courseSchedule'][i]['endTime'] ))
+		start_time = time.strptime(sec_info['courseSchedule'][i]['startTime'],"%H:%M")
+		start_time = time.strftime( "%-I:%M %p", start_time)
+		end_time = time.strptime(sec_info['courseSchedule'][i]['endTime'],"%H:%M")
+		end_time = time.strftime( "%-I:%M %p", end_time)
+		print("Time: {}-{}".format(start_time, end_time))
 		print("\n")
 		
 	if len(sec_info['examSchedule']) > 0:
 		print(delimiter)
-		print("Final exam date: {}".format(sec_info['examSchedule'][0]['startDate'].replace("00:00:00 PDT","").replace("  "," ")))
+		print("Final exam date: {}".format(sec_info['examSchedule'][0]['startDate'].replace("00:00:00 PST","").replace("  "," ")))
 		try:
 			print("Final exam location: {} {}, {}".format(
 										sec_info['examSchedule'][0]['buildingCode'],
@@ -142,7 +147,11 @@ def section_information():
 										)
 		except KeyError:
 			print("No location has been currently listed.")
-		print("Final exam time: {}-{}".format(sec_info['examSchedule'][0]['startTime'], sec_info['examSchedule'][0]['endTime']))
+		finalExam_start_time = time.strptime(sec_info['examSchedule'][0]['startTime'],"%H:%M")
+		finalExam_start_time = time.strftime( "%-I:%M %p",finalExam_start_time)
+		finalExam_end_time = time.strptime(sec_info['examSchedule'][0]['endTime'],"%H:%M")
+		finalExam_end_time = time.strftime( "%-I:%M %p",finalExam_end_time)
+		print("Final exam time: {}-{}".format(finalExam_start_time, finalExam_end_time))
 		print("\n")
 	else:
 		print("There is no final exam currently listed.")

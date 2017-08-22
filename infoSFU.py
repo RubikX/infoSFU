@@ -7,6 +7,7 @@ import requests
 import time
 import os
 import platform
+import re
 
 headers = {'User-agent': "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36"}
 delimiter = "=============================================================================="
@@ -18,6 +19,12 @@ if system == 'Windows':
 elif system == 'Linux':
 	clear = 'clear'
 
+semesters = ['fall','spring','summer']
+regex_year = re.compile(r"20[0-9]{2}$")
+regex_dept = re.compile(r"[a-z]{2,4}$")
+regex_coursenum = re.compile(r"[1-9][0-9]{2}$")
+regex_sectionnum = re.compile(r"[decfjuwxyzv][1-9][0-9]{2}$")
+
 def main():
 	os.system(clear)
 	print("Welcome to infoSFU")
@@ -28,7 +35,7 @@ def main():
 		if ans == "1":
 			course_information()
 			print("Would you like to continue? (y/n)")
-			user_input = input("").lower()
+			user_input = input().lower()
 			print("\n")
 			if user_input == "y":
 				ans = True
@@ -39,7 +46,7 @@ def main():
 		elif ans == "2":
 			section_information()
 			print("Would you like to continue? (y/n)")
-			user_input = input("").lower()
+			user_input = input().lower()
 			print("\n")
 			if user_input == "y":
 				ans = True
@@ -54,22 +61,32 @@ def main():
 
 
 def course_information(): 		
-	print("[Semester Year Department Course-number]",end="\n")
-	user_input = input("").split()
+	user_input = input().split()
 	user_input = [i.lower() for i in user_input]
+	semester = ''
+	for i in user_input:
+		for j in semesters:
+			if i == j:
+				semester = j
+
+	year = list(filter(regex_year.match,user_input))[0]
+	dept = list(filter(regex_dept.match,user_input))
+	dept = [i for i in dept if i not in semesters][0]
+	coursenum = list(filter(regex_coursenum.match,user_input))[0]
+
 	try:
-		if user_input[0].lower() == 'fall':
+		if semester.lower() == 'fall':
 			final_digit = '7'
-		elif user_input[0].lower() == 'spring':
+		elif semester.lower() == 'spring':
 			final_digit = '1'
 		else: # summer
 			final_digit = '4'
 
-		term_code = int('1'+user_input[1][-2:]+final_digit)
+		term_code = int('1'+year[-2:]+final_digit)
 
-		calender_url = "http://www.sfu.ca/bin/wcm/academic-calendar?{}/{}/courses/{}/{}".format(user_input[1],user_input[0],user_input[2],user_input[3])
-		sections_url = "http://api.lib.sfu.ca/courses/sections?term={}&department={}&number={}".format(term_code,user_input[2],user_input[3])
-		check_sections_url = "http://www.sfu.ca/bin/wcm/course-outlines?{}/{}/{}/{}/".format(user_input[1],user_input[0],user_input[2],user_input[3])
+		calender_url = "http://www.sfu.ca/bin/wcm/academic-calendar?{}/{}/courses/{}/{}".format(year,semester,dept,coursenum)
+		sections_url = "http://api.lib.sfu.ca/courses/sections?term={}&department={}&number={}".format(term_code,dept,coursenum)
+		check_sections_url = "http://www.sfu.ca/bin/wcm/course-outlines?{}/{}/{}/{}/".format(year,semester,dept,coursenum)
 		cycle = ['title','description','prerequisites']
 
 		response = requests.get(calender_url,headers=headers)
@@ -120,17 +137,29 @@ def course_information():
 			print(", ".join([x for x in labs]))
 		print(delimiter)
 		print("\n")
+
 	except IndexError:
 		print("You have not entered all the required information as specified.")
 		print("\n")
 
 def section_information():
-	print("[Semester Year Department Course-number Section]")
-	user_input = input("").split()
-	user_input = [i.lower() for i in user_input]	
+	user_input = input().split()
+	user_input = [i.lower() for i in user_input]
+	semester = ''
+	for i in user_input:
+		for j in semesters:
+			if i == j:
+				semester = j
+
+	year = list(filter(regex_year.match,user_input))[0]
+	dept = list(filter(regex_dept.match,user_input))
+	dept = [i for i in dept if i not in semesters][0]
+	coursenum = list(filter(regex_coursenum.match,user_input))[0]
+	sectionnum = list(filter(regex_sectionnum.match,user_input))[0]
+
 	try:
 		sec_info_url = 'http://www.sfu.ca/bin/wcm/course-outlines?{}/{}/{}/{}/{}'.format(
-					user_input[1],user_input[0],user_input[2],user_input[3],user_input[4])
+					year,semester,dept,coursenum,sectionnum)
 
 		response = requests.get(sec_info_url,headers=headers)
 		if response.status_code != 200:

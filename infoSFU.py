@@ -1,13 +1,25 @@
 # Author: Edison Suen
 # Description: infoSFU aggregates useful information from SFU about courses
 
+from __future__ import print_function
+from builtins import input
 import requests
 import time
+import os
+import platform
 
 headers = {'User-agent': "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36"}
 delimiter = "=============================================================================="
+system = platform.system()
+clear = ''
+
+if system == 'Windows':
+	clear = 'cls'
+elif system == 'Linux':
+	clear = 'clear'
 
 def main():
+	os.system(clear)
 	print("Welcome to infoSFU")
 	ans = True
 	while ans:
@@ -17,6 +29,7 @@ def main():
 			course_information()
 			print("Would you like to continue? (y/n)")
 			user_input = input("").lower()
+			print("\n")
 			if user_input == "y":
 				ans = True
 			elif user_input == "n":
@@ -27,6 +40,7 @@ def main():
 			section_information()
 			print("Would you like to continue? (y/n)")
 			user_input = input("").lower()
+			print("\n")
 			if user_input == "y":
 				ans = True
 			elif user_input == "n":
@@ -40,7 +54,7 @@ def main():
 
 
 def course_information(): 		
-	print("Format: Semester Year Department Course-number",end="\n")
+	print("[Semester Year Department Course-number]",end="\n")
 	user_input = input("").split()
 	user_input = [i.lower() for i in user_input]
 	try:
@@ -79,6 +93,7 @@ def course_information():
 		lectures = []
 		tutorials = []
 		labs = []
+
 		response_check_sections = requests.get(check_sections_url,headers=headers)
 		if response.status_code != 200:
 			print("Error: ",response.status_code)
@@ -108,8 +123,9 @@ def course_information():
 	except IndexError:
 		print("You have not entered all the required information as specified.")
 		print("\n")
+
 def section_information():
-	print("Format: Semester Year Department Course-number Section")
+	print("[Semester Year Department Course-number Section]")
 	user_input = input("").split()
 	user_input = [i.lower() for i in user_input]	
 	try:
@@ -162,6 +178,7 @@ def section_information():
 	except IndexError:
 		print("You have not entered all the required information as specified.")
 		print("\n")
+		
 # ================================================================================
 
 if __name__ == "__main__":

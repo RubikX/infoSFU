@@ -196,6 +196,7 @@ def section_information():
 											)
 			except KeyError:
 				print("No location has been currently listed.")
+				
 			finalExam_start_time = time.strptime(sec_info['examSchedule'][0]['startTime'],"%H:%M")
 			finalExam_start_time = time.strftime( "%-I:%M %p",finalExam_start_time)
 			finalExam_end_time = time.strptime(sec_info['examSchedule'][0]['endTime'],"%H:%M")
@@ -204,6 +205,9 @@ def section_information():
 			print("\n")
 		else:
 			print("There is no final exam currently listed.")
+
+	except KeyError:
+		pass
 	except IndexError:
 		print("You have not entered all the required information as specified.")
 		print("\n")
